@@ -6,126 +6,189 @@
 <title>TransferSupport</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{--gh:#c6efce;--gb:#70ad47;--gd:#375623;--ac:#1a7f37;--bg:#f4f9f4;--bd:#b0d4b5;--tx:#1e2d1f;--sh:0 4px 24px rgba(55,86,35,0.10);}
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:Arial,sans-serif;background:var(--bg);min-height:100vh;color:var(--tx);}
-  header{background:var(--gd);padding:16px 40px;}
-  .logo{font-size:1.3rem;font-weight:700;font-family:'IBM Plex Mono',monospace;color:#a8e6b0;}
-  .sub{font-size:0.75rem;color:#7db87f;font-weight:300;margin-top:2px;}
-  .main{max-width:1100px;margin:36px auto;padding:0 20px;}
-  .card{background:#fff;border-radius:14px;box-shadow:var(--sh);border:1.5px solid var(--bd);padding:26px 28px 22px;margin-bottom:28px;}
+:root{--gh:#c6efce;--gb:#70ad47;--gd:#375623;--ac:#1a7f37;--bg:#f4f9f4;--bd:#b0d4b5;--tx:#1e2d1f;--sh:0 4px 24px rgba(55,86,35,0.10);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Sora',sans-serif;background:var(--bg);min-height:100vh;color:var(--tx);}
+nav{background:var(--gd);display:flex;align-items:center;padding:0 32px;gap:0;}
+.nav-logo{font-size:1.15rem;font-weight:700;font-family:'IBM Plex Mono',monospace;color:#a8e6b0;padding:16px 24px 16px 0;border-right:1px solid #4a7a3a;margin-right:8px;}
+.nav-tab{padding:18px 22px;font-size:0.87rem;color:#7db87f;cursor:pointer;border-bottom:3px solid transparent;background:none;border-top:none;border-left:none;border-right:none;font-family:'Sora',sans-serif;}
+.nav-tab:hover{color:#c6efce;}
+.nav-tab.active{color:#c6efce;border-bottom:3px solid #a8e6b0;font-weight:600;}
+.page{display:none;max-width:1100px;margin:36px auto;padding:0 20px;}
+.page.active{display:block;}
+.card{background:#fff;border-radius:14px;box-shadow:var(--sh);border:1.5px solid var(--bd);padding:26px 28px 22px;margin-bottom:28px;}
 
-  .apikey-banner{background:#fffbe6;border:1.5px solid #f0c040;border-radius:10px;padding:14px 18px;margin-bottom:20px;display:none;align-items:center;gap:12px;flex-wrap:wrap;}
-  .apikey-banner.show{display:flex;}
-  .apikey-banner label{font-size:0.78rem;font-weight:600;color:#7a5c00;white-space:nowrap;}
-  .apikey-banner input{flex:1;min-width:200px;padding:7px 11px;border:1.5px solid #f0c040;border-radius:7px;font-family:'IBM Plex Mono',monospace;font-size:0.84rem;background:#fffdf0;color:#333;outline:none;}
-  .btn-savekey{background:#f0c040;border:none;border-radius:7px;padding:7px 18px;font-size:0.84rem;font-weight:600;font-family:'Sora',sans-serif;color:#5a4000;cursor:pointer;}
-  .apikey-hint{font-size:0.71rem;color:#9a7c00;width:100%;}
-  .apikey-hint a{color:#7a5c00;}
-  .key-status{font-size:0.75rem;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
-  .key-dot{width:8px;height:8px;border-radius:50%;background:#ccc;flex-shrink:0;}
-  .key-dot.ok{background:#1a7f37;}
-  .btn-changekey{font-size:0.72rem;color:#9ab09c;background:none;border:none;cursor:pointer;text-decoration:underline;padding:0;}
+/* TRANSFER PAGE */
+.apikey-banner{background:#fffbe6;border:1.5px solid #f0c040;border-radius:10px;padding:14px 18px;margin-bottom:20px;display:none;align-items:center;gap:12px;flex-wrap:wrap;}
+.apikey-banner.show{display:flex;}
+.apikey-banner label{font-size:0.78rem;font-weight:600;color:#7a5c00;white-space:nowrap;}
+.apikey-banner input{flex:1;min-width:200px;padding:7px 11px;border:1.5px solid #f0c040;border-radius:7px;font-family:'IBM Plex Mono',monospace;font-size:0.84rem;background:#fffdf0;color:#333;outline:none;}
+.btn-savekey{background:#f0c040;border:none;border-radius:7px;padding:7px 18px;font-size:0.84rem;font-weight:600;font-family:'Sora',sans-serif;color:#5a4000;cursor:pointer;}
+.apikey-hint{font-size:0.71rem;color:#9a7c00;width:100%;}
+.apikey-hint a{color:#7a5c00;}
+.key-status{font-size:0.75rem;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.key-dot{width:8px;height:8px;border-radius:50%;background:#ccc;flex-shrink:0;}
+.key-dot.ok{background:#1a7f37;}
+.btn-changekey{font-size:0.72rem;color:#9ab09c;background:none;border:none;cursor:pointer;text-decoration:underline;padding:0;}
+.tabs{display:flex;margin-bottom:14px;border:1.5px solid var(--bd);border-radius:8px;overflow:hidden;width:fit-content;}
+.tab{padding:8px 22px;font-size:0.87rem;cursor:pointer;background:#f4f9f4;color:#7a9e7c;border:none;font-family:'Sora',sans-serif;}
+.tab.active{background:var(--gd);color:#e8f5e9;font-weight:600;}
+#pasteBox{width:100%;min-height:120px;border:1.5px solid var(--bd);border-radius:8px;padding:11px 14px;font-family:'IBM Plex Mono',monospace;font-size:0.88rem;background:#f9fdf9;color:var(--tx);outline:none;white-space:pre-wrap;word-break:break-word;cursor:text;line-height:1.6;}
+#pasteBox:focus{border-color:var(--ac);background:#fff;}
+#pasteBox:empty:before{content:"Dán nội dung từ Slack / Google Chat vào đây...";color:#aac4ac;pointer-events:none;}
+.img-drop{width:100%;min-height:150px;border:2px dashed var(--bd);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;background:#f9fdf9;color:#9ab09c;font-size:0.87rem;position:relative;transition:border-color 0.2s;}
+.img-drop:hover,.img-drop.drag{border-color:var(--ac);background:#f0faf0;}
+.img-drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.img-preview{width:100%;border-radius:10px;overflow:hidden;position:relative;display:none;border:1.5px solid var(--bd);}
+.img-preview img{width:100%;max-height:260px;object-fit:contain;background:#f9fdf9;display:block;}
+.remove-img{position:absolute;top:8px;right:8px;background:#fff;border:1.5px solid var(--bd);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:#666;}
+.hint{font-size:0.74rem;color:#9ab09c;margin-top:8px;line-height:1.7;}
+.hint code{background:#edf7ee;padding:1px 5px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:0.71rem;}
+.btn-row{display:flex;gap:10px;margin-top:16px;align-items:center;}
+.btn-t{background:var(--ac);color:#fff;border:none;border-radius:8px;padding:10px 28px;font-size:0.92rem;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;}
+.btn-t:hover{background:#145a28;}
+.btn-t:disabled{background:#9ab09c;cursor:not-allowed;}
+.btn-c{background:transparent;color:#888;border:1.5px solid #ddd;border-radius:8px;padding:10px 18px;font-size:0.85rem;font-family:'Sora',sans-serif;cursor:pointer;}
+.err{background:#fff0f0;border:1.5px solid #f9b0b0;border-radius:8px;color:#c0392b;font-size:0.82rem;padding:9px 14px;margin-top:10px;display:none;}
+.ld{font-size:0.84rem;color:var(--ac);margin-top:10px;display:none;align-items:center;gap:8px;}
+.sp{width:16px;height:16px;border:2px solid #c6efce;border-top-color:var(--ac);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.result{background:#fff;border-radius:14px;box-shadow:var(--sh);border:1.5px solid var(--bd);overflow:hidden;display:none;animation:fadeUp 0.3s ease;margin-bottom:24px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.res-hdr{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:#f0faf1;border-bottom:1.5px solid var(--bd);}
+.res-hdr span{font-size:0.75rem;font-weight:600;color:var(--ac);text-transform:uppercase;letter-spacing:0.08em;}
+.btn-cp{background:var(--gh);border:1.5px solid var(--gb);color:var(--gd);border-radius:6px;padding:5px 14px;font-size:0.78rem;font-family:'Sora',sans-serif;font-weight:600;cursor:pointer;}
+.btn-cp:hover{background:#a9ddb2;}
+.tbl-wrap{overflow-x:auto;padding:16px 20px 20px;}
+table.tbl1{width:100%;border-collapse:collapse;font-size:10px;font-family:Arial,sans-serif;margin-bottom:14px;}
+table.tbl1 th,table.tbl1 td{border:1px solid var(--gb);padding:7px 11px;text-align:center;font-family:Arial,sans-serif;font-size:10px;}
+.ra th{background:var(--gh);color:var(--gd);font-weight:700;}
+.rp th{background:#ddf0de;color:var(--gd);font-weight:700;}
+.rh th{background:var(--gh);color:var(--gd);font-weight:700;}
+table.tbl1 tbody td{background:#fff;color:var(--tx);vertical-align:top;}
+table.tbl1 td.feat{text-align:left;white-space:pre-wrap;}
+table.tbl2{width:100%;border-collapse:collapse;font-size:10px;font-family:Arial,sans-serif;margin-bottom:14px;}
+table.tbl2 th{background:#fce4d6;color:#843c0c;border:1px solid #f4b183;padding:7px 10px;font-weight:700;font-size:10px;font-family:Arial,sans-serif;white-space:nowrap;}
+table.tbl2 td{border:1px solid #f4b183;padding:7px 10px;text-align:center;background:#fff;color:var(--tx);font-size:10px;font-family:Arial,sans-serif;vertical-align:top;}
+table.tbl2 input.cell-input{width:100%;min-width:80px;border:none;border-bottom:1px dashed #f4b183;outline:none;font-family:Arial,sans-serif;font-size:10px;background:transparent;text-align:center;color:inherit;padding:1px 2px;}
+.ld2{font-size:0.82rem;color:#c05a00;margin:8px 20px;display:none;align-items:center;gap:8px;}
+.sp2{width:14px;height:14px;border:2px solid #fce4d6;border-top-color:#c05a00;border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;}
 
-  .tabs{display:flex;margin-bottom:14px;border:1.5px solid var(--bd);border-radius:8px;overflow:hidden;width:fit-content;}
-  .tab{padding:8px 22px;font-size:0.87rem;cursor:pointer;background:#f4f9f4;color:#7a9e7c;border:none;font-family:'Sora',sans-serif;}
-  .tab.active{background:var(--gd);color:#e8f5e9;font-weight:600;}
+/* REMOTE CONFIG PAGE */
+.rc-layout{display:flex;gap:0;height:580px;border:1.5px solid var(--bd);border-radius:14px;overflow:hidden;box-shadow:var(--sh);}
+.rc-sidebar{width:200px;background:#f4f9f4;border-right:1px solid var(--bd);display:flex;flex-direction:column;flex-shrink:0;}
+.rc-sb-hdr{background:var(--gd);padding:10px 12px;display:flex;align-items:center;justify-content:space-between;}
+.rc-sb-ttl{font-size:12px;font-weight:600;color:#fff;}
+.rc-sb-new{background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;font-family:'Sora',sans-serif;}
+.rc-sb-new:hover{background:rgba(255,255,255,0.35);}
+.rc-sb-list{flex:1;overflow-y:auto;padding:6px;}
+.rc-sb-item{padding:7px 9px;border-radius:5px;cursor:pointer;border:1px solid transparent;margin-bottom:3px;}
+.rc-sb-item:hover{background:#e8f5e0;border-color:var(--bd);}
+.rc-sb-item.active{background:var(--gh);border-color:var(--gb);}
+.rc-sb-name{font-size:12px;color:var(--tx);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rc-sb-date{font-size:10px;color:#9ab09c;margin-top:1px;}
+.rc-sb-actions{display:flex;gap:6px;margin-top:3px;}
+.rc-sb-btn{font-size:10px;background:none;border:none;cursor:pointer;padding:0;opacity:0.65;}
+.rc-sb-btn:hover{opacity:1;}
+.rc-sb-btn.del{color:#c0392b;}
+.rc-sb-btn.cp{color:#185fa5;}
+.rc-sb-btn.cp.copied{color:#1a7f37;}
+.rc-sb-empty{font-size:11px;color:#aac4aa;text-align:center;padding:20px 10px;line-height:1.6;}
+.rc-editor-area{flex:1;display:flex;flex-direction:column;min-width:0;}
+.rc-bar1{background:#7aaa5a;display:flex;align-items:center;padding:4px 8px;gap:3px;flex-wrap:nowrap;}
+.rc-name-in{background:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.5);border-radius:4px;padding:3px 8px;font-size:12px;font-family:'IBM Plex Mono',monospace;color:#1e2d1f;outline:none;width:140px;}
+.rc-name-in:focus{background:#fff;}
+.rc-sep{width:1px;height:18px;background:rgba(255,255,255,0.3);margin:0 2px;}
+.rc-ic{background:none;border:none;cursor:pointer;padding:3px 4px;color:#fff;border-radius:3px;display:flex;align-items:center;opacity:0.9;}
+.rc-ic:hover{background:rgba(255,255,255,0.2);}
+.rc-ic svg{width:14px;height:14px;fill:currentColor;}
+.rc-save-btn{background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.5);color:#fff;border-radius:4px;padding:3px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;}
+.rc-save-btn:hover{background:rgba(255,255,255,0.35);}
+.rc-save-ok{font-size:11px;color:rgba(255,255,255,0.9);display:none;}
+.rc-bar2{background:#8fba6e;display:flex;align-items:center;gap:2px;padding:3px 8px;border-top:1px solid #6a9a4a;}
+.rc-vtab{padding:3px 10px;font-size:11px;cursor:pointer;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);font-family:'Sora',sans-serif;}
+.rc-vtab:first-child{border-radius:3px 0 0 3px;}.rc-vtab:last-child{border-radius:0 3px 3px 0;}
+.rc-vtab.active{background:rgba(255,255,255,0.9);color:#4a7a2a;font-weight:600;}
+.rc-vtab:not(:first-child){border-left:none;}
+.rc-body{flex:1;display:flex;overflow:hidden;}
+.rc-text-view{display:flex;flex:1;overflow:hidden;}
+.rc-line-nums{background:#f0f4ee;border-right:1px solid #d0dcc8;padding:8px 5px;font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.6;color:#9ab09a;text-align:right;min-width:30px;user-select:none;white-space:pre;overflow:hidden;}
+.rc-edit{flex:1;padding:8px;font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.6;outline:none;background:#fff;color:var(--tx);overflow:auto;white-space:pre-wrap;word-break:break-word;cursor:text;}
+.rc-edit:empty:before{content:"Dán JSON vào đây...";color:#aac4ac;pointer-events:none;}
+.rc-tree-view{flex:1;overflow:auto;padding:10px;display:none;font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.9;}
+.t-row{display:flex;align-items:baseline;gap:4px;margin:1px 0;}
+.t-tog{cursor:pointer;color:#7aaa5a;user-select:none;width:14px;text-align:center;flex-shrink:0;}
+.t-key{color:#2d6a1a;font-weight:600;}
+.t-val{border:1px solid transparent;border-radius:3px;padding:0 3px;cursor:text;min-width:20px;}
+.t-val:hover{border-color:var(--bd);background:#f4f9f4;}
+.t-val:focus{border-color:#7aaa5a;background:#fff;outline:none;}
+.t-str{color:#c05a00;}.t-num{color:#185fa5;}.t-bool{color:#843c0c;}.t-null{color:#888;}
+.t-bracket{color:#888;}
+.t-children{margin-left:20px;border-left:1px dashed var(--bd);padding-left:8px;}
+.t-children.col{display:none;}
+.rc-table-view{flex:1;overflow:auto;padding:10px;display:none;}
+.rc-status{background:#f0f4ee;border-top:1px solid #d0dcc8;padding:2px 10px;font-size:10px;color:#7a9a6a;display:flex;gap:16px;flex-shrink:0;}
 
-  #pasteBox{width:100%;min-height:120px;border:1.5px solid var(--bd);border-radius:8px;padding:11px 14px;font-family:'IBM Plex Mono',monospace;font-size:0.88rem;background:#f9fdf9;color:var(--tx);outline:none;white-space:pre-wrap;word-break:break-word;cursor:text;line-height:1.6;}
-  #pasteBox:focus{border-color:var(--ac);background:#fff;}
-  #pasteBox:empty:before{content:"Dán nội dung từ Slack / Google Chat vào đây...";color:#aac4ac;pointer-events:none;}
+/* Banner table in RC */
+table.banner-tbl{border-collapse:collapse;font-family:Arial,sans-serif;font-size:10px;}
+table.banner-tbl th,table.banner-tbl td{border:1px solid #9bbb59;padding:4px 8px;text-align:center;font-family:Arial,sans-serif;font-size:10px;}
+.bg-green{background:#c6efce;color:#375623;font-weight:700;}
+.bg-global{background:#ebf1de;color:#375623;font-weight:700;}
+.bg-organic{background:#dce6f1;color:#17375e;font-weight:700;}
+.banner-tbl tbody td{background:#fff;color:#1e2d1f;}
+.banner-tbl tbody tr:nth-child(even) td{background:#f9fdf9;}
+.banner-tbl tbody tr:hover td{background:#f0faf0;}
+.td-stt{background:#c6efce!important;color:#375623;font-weight:700;}
+.td-scene{text-align:left;}
 
-  .img-drop{width:100%;min-height:150px;border:2px dashed var(--bd);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;background:#f9fdf9;color:#9ab09c;font-size:0.87rem;position:relative;transition:border-color 0.2s;}
-  .img-drop:hover,.img-drop.drag{border-color:var(--ac);background:#f0faf0;}
-  .img-drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-  .img-preview{width:100%;border-radius:10px;overflow:hidden;position:relative;display:none;border:1.5px solid var(--bd);}
-  .img-preview img{width:100%;max-height:260px;object-fit:contain;background:#f9fdf9;display:block;}
-  .remove-img{position:absolute;top:8px;right:8px;background:#fff;border:1.5px solid var(--bd);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:#666;}
-
-  .hint{font-size:0.74rem;color:#9ab09c;margin-top:8px;line-height:1.7;}
-  .hint code{background:#edf7ee;padding:1px 5px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:0.71rem;}
-  .btn-row{display:flex;gap:10px;margin-top:16px;align-items:center;}
-  .btn-t{background:var(--ac);color:#fff;border:none;border-radius:8px;padding:10px 28px;font-size:0.92rem;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;transition:background 0.15s;}
-  .btn-t:hover{background:#145a28;}
-  .btn-t:disabled{background:#9ab09c;cursor:not-allowed;}
-  .btn-c{background:transparent;color:#888;border:1.5px solid #ddd;border-radius:8px;padding:10px 18px;font-size:0.85rem;font-family:'Sora',sans-serif;cursor:pointer;}
-  .err{background:#fff0f0;border:1.5px solid #f9b0b0;border-radius:8px;color:#c0392b;font-size:0.82rem;padding:9px 14px;margin-top:10px;display:none;}
-  .ld{font-size:0.84rem;color:var(--ac);margin-top:10px;display:none;align-items:center;gap:8px;}
-  .sp{width:16px;height:16px;border:2px solid #c6efce;border-top-color:var(--ac);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;}
-  @keyframes spin{to{transform:rotate(360deg);}}
-
-  .result{background:#fff;border-radius:14px;box-shadow:var(--sh);border:1.5px solid var(--bd);overflow:hidden;display:none;animation:fadeUp 0.3s ease;margin-bottom:24px;}
-  @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
-  .res-hdr{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:#f0faf1;border-bottom:1.5px solid var(--bd);}
-  .res-hdr span{font-size:0.75rem;font-weight:600;color:var(--ac);text-transform:uppercase;letter-spacing:0.08em;}
-  .btn-cp{background:var(--gh);border:1.5px solid var(--gb);color:var(--gd);border-radius:6px;padding:5px 14px;font-size:0.78rem;font-family:'Sora',sans-serif;font-weight:600;cursor:pointer;}
-  .btn-cp:hover{background:#a9ddb2;}
-  .tbl-wrap{overflow-x:auto;padding:16px 20px 20px;}
-
-  /* Table 1 - update style */
-  table.tbl1{width:100%;border-collapse:collapse;font-size:10px;font-family:Arial,sans-serif;margin-bottom:14px;}
-  table.tbl1 th,table.tbl1 td{border:1px solid var(--gb);padding:7px 11px;text-align:center;}
-  .ra th{background:var(--gh);color:var(--gd);font-weight:700;font-size:10px;}
-  .rp th{background:#ddf0de;color:var(--gd);font-weight:600;font-size:10px;}
-  .rh th{background:var(--gh);color:var(--gd);font-weight:700;font-size:10px;}
-  table.tbl1 tbody td{background:#fff;color:var(--tx);vertical-align:top;}
-  table.tbl1 td.feat{text-align:left;white-space:pre-wrap;}
-  table.tbl1 tbody tr:hover td{background:#f4faf5;}
-
-  /* Table 2 - release style */
-  table.tbl2{width:100%;border-collapse:collapse;font-size:10px;font-family:Arial,sans-serif;margin-bottom:14px;}
-  table.tbl2 th{background:#fce4d6;color:#843c0c;border:1px solid #f4b183;padding:7px 10px;font-weight:700;font-size:10px;font-family:Arial,sans-serif;white-space:nowrap;}
-  table.tbl2 td{border:1px solid #f4b183;padding:7px 10px;text-align:center;background:#fff;color:var(--tx);vertical-align:top;}
-  table.tbl2 td.editable{cursor:pointer;min-width:80px;}
-  table.tbl2 td.editable:hover{background:#fff8f5;}
-  table.tbl2 input.cell-input{width:100%;border:none;outline:none;font-family:Arial,sans-serif;font-size:10px;background:transparent;text-align:center;}
-  .ld2{font-size:0.82rem;color:#c05a00;margin:8px 20px;display:none;align-items:center;gap:8px;}
-  .sp2{width:14px;height:14px;border:2px solid #fce4d6;border-top-color:#c05a00;border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;}
+/* RC Table generic */
+table.rc-tbl{width:100%;border-collapse:collapse;font-size:11px;font-family:'IBM Plex Mono',monospace;}
+table.rc-tbl th{background:var(--gh);color:var(--gd);border:1px solid var(--gb);padding:5px 8px;text-align:left;font-weight:700;white-space:nowrap;}
+table.rc-tbl td{border:1px solid var(--bd);padding:0;background:#fff;color:var(--tx);vertical-align:top;}
+table.rc-tbl td .cell-in{width:100%;padding:5px 8px;border:none;outline:none;background:transparent;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--tx);cursor:text;}
+table.rc-tbl td .cell-in:focus{background:#f0faf0;}
+table.rc-tbl tr:hover td{background:#f8fdf8;}
 </style>
 </head>
 <body>
-<header>
-  <div class="logo">⇄ TransferSupport</div>
-  <div class="sub">Release note formatter — text hoặc ảnh → bảng chuẩn</div>
-</header>
 
-<div class="main">
+<nav>
+  <div class="nav-logo">⇄ TransferSupport</div>
+  <button class="nav-tab active" onclick="switchPage('transfer',this)">Transfer Note</button>
+  <button class="nav-tab" onclick="switchPage('rc',this)">Remote Config</button>
+</nav>
+
+<!-- PAGE 1: TRANSFER -->
+<div class="page active" id="page-transfer">
   <div class="card">
     <div class="apikey-banner" id="apiBanner">
       <label>🔑 Gemini API Key</label>
       <input type="password" id="apiKeyInput" placeholder="AIza..." autocomplete="off">
       <button class="btn-savekey" onclick="saveKey()">Lưu</button>
-      <div class="apikey-hint">Key lưu trên trình duyệt, chỉ dùng cho tính năng đọc ảnh.<br>Lấy key tại: <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a></div>
+      <div class="apikey-hint">Key lưu trên trình duyệt. Lấy tại: <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a></div>
     </div>
     <div class="key-status" id="keyStatus" style="display:none">
       <div class="key-dot ok"></div>
       <span style="font-size:0.75rem;color:#557559">API Key đã lưu</span>
       <button class="btn-changekey" onclick="changeKey()">Đổi key</button>
     </div>
-
     <div class="tabs">
       <button class="tab active" onclick="switchTab('text')">✏️ Text</button>
       <button class="tab" onclick="switchTab('image')">🖼️ Ảnh</button>
     </div>
-
     <div id="textPane">
       <div id="pasteBox" contenteditable="true" spellcheck="false"></div>
-      <div class="hint">Hỗ trợ <code>update</code> hoặc <code>release</code>. Dòng có <code>@</code> hoặc link <code>http</code> bị bỏ qua ở bảng 1. Khi có <code>release</code> sẽ xuất thêm bảng thông tin app.</div>
+      <div class="hint">Hỗ trợ <code>update</code> hoặc <code>release</code>. Dòng có <code>@</code> hoặc link <code>http</code> bị bỏ qua.</div>
     </div>
-
     <div id="imagePane" style="display:none">
       <div class="img-drop" id="imgDrop">
         <input type="file" id="imgInput" accept="image/*" onchange="onFile(event)">
         <svg width="32" height="32" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#9ab09c" stroke-width="1.3"/><circle cx="8.5" cy="8.5" r="1.5" fill="#9ab09c"/><path d="M3 15l5-5 4 4 3-3 6 6" stroke="#9ab09c" stroke-width="1.3" stroke-linecap="round"/></svg>
-        <span>Nhấn để chọn, kéo thả, hoặc <b>Ctrl+V</b> để dán ảnh</span>
+        <span>Nhấn để chọn, kéo thả, hoặc Ctrl+V để dán ảnh</span>
       </div>
-      <div class="img-preview" id="imgPreview">
-        <img id="imgThumb" src="" alt="">
-        <div class="remove-img" onclick="removeImg()">✕</div>
-      </div>
+      <div class="img-preview" id="imgPreview"><img id="imgThumb" src="" alt=""><div class="remove-img" onclick="removeImg()">✕</div></div>
       <div class="hint">Dán ảnh chụp màn hình Slack / Google Chat — AI tự đọc nội dung.</div>
     </div>
-
     <div class="btn-row">
       <button class="btn-t" id="btnT" onclick="doTransfer()">⇄ Transfer</button>
       <button class="btn-c" onclick="doClear()">✕ Clear</button>
@@ -133,218 +196,260 @@
     <div class="err" id="errMsg"></div>
     <div class="ld" id="ldMsg"><div class="sp"></div><span id="ldTxt">Đang xử lý...</span></div>
   </div>
-
-  <!-- Bảng 1: Update/Release features -->
   <div class="result" id="result1">
-    <div class="res-hdr"><span>Bảng cập nhật</span><button class="btn-cp" onclick="copyTbl('tblOut1')">📋 Copy</button></div>
+    <div class="res-hdr"><span>Bảng cập nhật</span><button class="btn-cp" onclick="copyTbl('tblOut1',this)">📋 Copy</button></div>
     <div class="tbl-wrap" id="tblOut1"></div>
   </div>
-
-  <!-- Bảng 2: Release info (chỉ khi có release) -->
   <div class="result" id="result2">
-    <div class="res-hdr"><span>Bảng thông tin Release</span><button class="btn-cp" onclick="copyTbl('tblOut2')">📋 Copy</button></div>
+    <div class="res-hdr"><span>Bảng thông tin Release</span><button class="btn-cp" onclick="copyTbl('tblOut2',this)">📋 Copy</button></div>
     <div class="ld2" id="ldStore"><div class="sp2"></div><span>Đang đọc thông tin từ Play Store...</span></div>
     <div class="tbl-wrap" id="tblOut2"></div>
   </div>
 </div>
 
-<script>
-let tab='text', b64=null, mime='image/png';
+<!-- PAGE 2: REMOTE CONFIG -->
+<div class="page" id="page-rc">
+  <div class="rc-layout">
+    <div class="rc-sidebar">
+      <div class="rc-sb-hdr">
+        <span class="rc-sb-ttl">JSON Files</span>
+        <button class="rc-sb-new" onclick="rcNew()">+ New</button>
+      </div>
+      <div class="rc-sb-list" id="rcSbList"></div>
+    </div>
+    <div class="rc-editor-area">
+      <div class="rc-bar1">
+        <input class="rc-name-in" id="rcFileName" value="New JSON" placeholder="Tên file...">
+        <div class="rc-sep"></div>
+        <button class="rc-save-btn" onclick="rcSave()">Lưu</button>
+        <span class="rc-save-ok" id="rcSaveOk">✓ Đã lưu!</span>
+        <div class="rc-sep"></div>
+        <button class="rc-ic" onclick="rcFormat()" title="Format"><svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg></button>
+        <button class="rc-ic" onclick="rcCompact()" title="Compact"><svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm4 5h8v2H8zm3 5h2v2h-2z"/></svg></button>
+        <button class="rc-ic" onclick="rcSmart()" title="Sort keys"><svg viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></svg></button>
+        <div class="rc-sep"></div>
+        <button class="rc-ic" onclick="rcExpandAll()" title="Expand all"><svg viewBox="0 0 24 24"><path d="M12 5.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"/></svg></button>
+        <button class="rc-ic" onclick="rcCollapseAll()" title="Collapse all"><svg viewBox="0 0 24 24"><path d="M7.41 18.59L8.83 20 12 16.83 15.17 20l1.41-1.41L12 14l-4.59 4.59zm9.18-13.18L15.17 4 12 7.17 8.83 4 7.41 5.41 12 10l4.59-4.59z"/></svg></button>
+        <div class="rc-sep"></div>
+        <button class="rc-ic" onclick="rcCopyAll()" title="Copy JSON"><svg viewBox="0 0 24 24"><path d="M16 1H4a2 2 0 00-2 2v14h2V3h12V1zm3 4H8a2 2 0 00-2 2v14a2 2 0 002 2h11a2 2 0 002-2V7a2 2 0 00-2-2zm0 16H8V7h11v14z"/></svg></button>
+        <button class="rc-ic" onclick="rcDownload()" title="Download"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></button>
+      </div>
+      <div class="rc-bar2">
+        <button class="rc-vtab active" onclick="rcSwitchView('text',this)">text</button>
+        <button class="rc-vtab" onclick="rcSwitchView('tree',this)">tree</button>
+        <button class="rc-vtab" onclick="rcSwitchView('table',this)">table</button>
+      </div>
+      <div class="rc-body">
+        <div class="rc-text-view" id="rcVText">
+          <div class="rc-line-nums" id="rcLineNums">1</div>
+          <div class="rc-edit" id="rcEdit" contenteditable="true" spellcheck="false" oninput="rcOnEdit()" onscroll="rcSyncLn()"></div>
+        </div>
+        <div class="rc-tree-view" id="rcVTree"></div>
+        <div class="rc-table-view" id="rcVTable"></div>
+      </div>
+      <div class="rc-status">
+        <span id="rcStLen">0 chars</span>
+        <span id="rcStJson"></span>
+      </div>
+    </div>
+  </div>
+</div>
 
-function loadKeyUI(){
-  const key=localStorage.getItem('gemini_key');
-  if(key){document.getElementById('apiBanner').classList.remove('show');document.getElementById('keyStatus').style.display='flex';}
-  else{document.getElementById('apiBanner').classList.add('show');document.getElementById('keyStatus').style.display='none';}
+<script>
+// ===== PAGE NAV =====
+function switchPage(p,btn){
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  btn.classList.add('active');
 }
+
+// ===== TRANSFER =====
+let tab='text',b64=null,mime='image/png';
+function loadKeyUI(){const k=localStorage.getItem('gemini_key');if(k){document.getElementById('apiBanner').classList.remove('show');document.getElementById('keyStatus').style.display='flex';}else{document.getElementById('apiBanner').classList.add('show');document.getElementById('keyStatus').style.display='none';}}
 function saveKey(){const v=document.getElementById('apiKeyInput').value.trim();if(!v)return;localStorage.setItem('gemini_key',v);document.getElementById('apiKeyInput').value='';loadKeyUI();}
 function changeKey(){localStorage.removeItem('gemini_key');loadKeyUI();}
-function getKey(){return localStorage.getItem('gemini_key')||'';}
 loadKeyUI();
-
-function switchTab(t){
-  tab=t;
-  document.getElementById('textPane').style.display=t==='text'?'':'none';
-  document.getElementById('imagePane').style.display=t==='image'?'':'none';
-  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',(i===0)===(t==='text')));
-}
-
+function switchTab(t){tab=t;document.getElementById('textPane').style.display=t==='text'?'':'none';document.getElementById('imagePane').style.display=t==='image'?'':'none';document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',(i===0)===(t==='text')));}
 function onFile(e){if(e.target.files[0])loadImg(e.target.files[0]);}
-function loadImg(file){
-  mime=file.type||'image/png';
-  const r=new FileReader();
-  r.onload=ev=>{b64=ev.target.result.split(',')[1];document.getElementById('imgThumb').src=ev.target.result;document.getElementById('imgPreview').style.display='block';document.getElementById('imgDrop').style.display='none';};
-  r.readAsDataURL(file);
-}
+function loadImg(file){mime=file.type||'image/png';const r=new FileReader();r.onload=ev=>{b64=ev.target.result.split(',')[1];document.getElementById('imgThumb').src=ev.target.result;document.getElementById('imgPreview').style.display='block';document.getElementById('imgDrop').style.display='none';};r.readAsDataURL(file);}
 function removeImg(){b64=null;document.getElementById('imgPreview').style.display='none';document.getElementById('imgDrop').style.display='flex';document.getElementById('imgInput').value='';}
-document.addEventListener('paste',e=>{
-  if(tab!=='image')return;
-  for(const item of(e.clipboardData?.items||[])){if(item.type.startsWith('image/')){e.preventDefault();loadImg(item.getAsFile());break;}}
-});
+document.addEventListener('paste',e=>{if(tab!=='image')return;for(const item of(e.clipboardData?.items||[])){if(item.type.startsWith('image/')){e.preventDefault();loadImg(item.getAsFile());break;}}});
 const drop=document.getElementById('imgDrop');
 drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('drag');});
 drop.addEventListener('dragleave',()=>drop.classList.remove('drag'));
 drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('drag');const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))loadImg(f);});
-
-function getToday(){const d=new Date();return[d.getDate(),d.getMonth()+1,d.getFullYear()].map((v,i)=>i<2?String(v).padStart(2,'0'):v).join('/');}
+function getToday(){const d=new Date();return[String(d.getDate()).padStart(2,'0'),String(d.getMonth()+1).padStart(2,'0'),d.getFullYear()].join('/');}
 function getMonthYear(){const d=new Date();return`${d.getMonth()+1}/${d.getFullYear()}`;}
 function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function getText(){
-  function walk(n){if(n.nodeType===3)return n.textContent;if(n.nodeName==='BR')return'\n';if(['DIV','P','LI'].includes(n.nodeName))return Array.from(n.childNodes).map(walk).join('')+'\n';return Array.from(n.childNodes).map(walk).join('');}
-  return walk(document.getElementById('pasteBox')).trim();
-}
-
+function getTxt(){function walk(n){if(n.nodeType===3)return n.textContent;if(n.nodeName==='BR')return'\n';if(['DIV','P','LI'].includes(n.nodeName))return Array.from(n.childNodes).map(walk).join('')+'\n';return Array.from(n.childNodes).map(walk).join('');}return walk(document.getElementById('pasteBox')).trim();}
 const HDR=/^(.+?)\s+(update|release)\s+([\d]+(?:\.[\d]+)*(?:\s*\(\d+\))?)/i;
+function splitBlocks(raw){const lines=raw.split('\n'),blocks=[];let cur=null;lines.forEach(l=>{if(HDR.test(l)&&!/^\s*[•*\-–]/.test(l)){if(cur)blocks.push(cur);cur=[l];}else if(cur)cur.push(l);});if(cur)blocks.push(cur);return blocks;}
+function parseBlock(block){if(!block.length)return null;const h=block[0],m=h.match(HDR);if(!m)return null;const appName=m[1].trim().toUpperCase().replace(/\s+/g,'');const rawAppName=m[1].trim();const version=m[3].replace(/\s+/g,'');const isRelease=/release/i.test(m[2]);const features=block.slice(1).filter(l=>l.trim()&&!/@/.test(l)&&!/https?:\/\//.test(l)).join('\n').trim();const storeUrl=(block.find(l=>/https?:\/\//.test(l))||'').trim();const pkgMatch=storeUrl.match(/[?&]id=([^&]+)/);return{appName,rawAppName,version,isRelease,features,storeUrl,packageName:pkgMatch?pkgMatch[1]:'',date:getToday()};}
+function buildTbl1(entries){const map={};entries.forEach(e=>{if(!map[e.appName])map[e.appName]={appName:e.appName,rows:[]};map[e.appName].rows.push(e);});let h='';Object.values(map).forEach(g=>{h+=`<table class="tbl1"><thead><tr class="ra"><th colspan="4">${esc(g.appName)}</th></tr><tr class="rp"><th colspan="4">Android</th></tr><tr class="rh"><th style="width:105px">Date</th><th style="width:95px">Version</th><th>Updated Features</th><th style="width:85px">Note</th></tr>`;g.rows.forEach(r=>h+=`<tr><td>${esc(r.date)}</td><td>${esc(r.version)}</td><td class="feat">${esc(r.features)}</td><td></td></tr>`);h+=`</thead><tbody></tbody></table>`;});return h;}
+function buildTbl2(releases){let h=`<table class="tbl2"><thead><tr><th>STT</th><th>Date</th><th>Nick name</th><th>Name</th><th>TK publish trên</th><th>Trans Acc</th><th>Trang thái</th><th>Android</th><th>iOS</th><th>Note</th><th>Package Name</th></tr></thead><tbody>`;releases.forEach((r,i)=>{h+=`<tr><td>${i+1}</td><td>${esc(getMonthYear())}</td><td>${esc(r.rawAppName)}</td><td><input class="cell-input" placeholder="Nhập tên game..."></td><td><input class="cell-input" placeholder="Nhập nhà phát hành..."></td><td></td><td>Test prototype</td><td style="word-break:break-all;font-size:9px">${esc(r.storeUrl)}</td><td></td><td></td><td>${esc(r.packageName)}</td></tr>`;});return h+`</tbody></table>`;}
+async function doTransfer(){const err=document.getElementById('errMsg'),ld=document.getElementById('ldMsg'),btn=document.getElementById('btnT');err.style.display='none';ld.style.display='none';let raw='';if(tab==='image'){if(!b64){err.textContent='Vui lòng chọn hoặc dán ảnh.';err.style.display='block';return;}btn.disabled=true;ld.style.display='flex';document.getElementById('ldTxt').textContent='Đang đọc ảnh bằng AI...';try{const resp=await fetch('/.netlify/functions/ocr',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'ocr',imageBase64:b64,imageMime:mime})});if(!resp.ok)throw new Error('HTTP '+resp.status);raw=(await resp.json()).text||'';}catch(e){btn.disabled=false;ld.style.display='none';err.textContent='Lỗi: '+e.message;err.style.display='block';return;}btn.disabled=false;ld.style.display='none';}else{raw=getTxt();}if(!raw.trim()){err.textContent='Không có nội dung.';err.style.display='block';return;}const entries=splitBlocks(raw).map(parseBlock).filter(Boolean);if(!entries.length){err.textContent='Không nhận diện được dữ liệu.';err.style.display='block';return;}document.getElementById('tblOut1').innerHTML=buildTbl1(entries);document.getElementById('result1').style.display='block';const releases=entries.filter(e=>e.isRelease);if(releases.length){document.getElementById('result2').style.display='block';document.getElementById('ldStore').style.display='flex';for(const r of releases){try{const resp=await fetch('/.netlify/functions/ocr',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'playstore',storeUrl:r.storeUrl})});r.appInfo=resp.ok?await resp.json():{appName:'',publisher:'',packageName:r.packageName};}catch{r.appInfo={appName:'',publisher:'',packageName:r.packageName};}}document.getElementById('ldStore').style.display='none';document.getElementById('tblOut2').innerHTML=buildTbl2(releases);}else{document.getElementById('result2').style.display='none';}document.getElementById('result1').scrollIntoView({behavior:'smooth',block:'start'});}
+function doClear(){document.getElementById('pasteBox').innerHTML='';['tblOut1','tblOut2'].forEach(id=>document.getElementById(id).innerHTML='');['result1','result2','errMsg','ldMsg'].forEach(id=>document.getElementById(id).style.display='none');removeImg();}
+function copyTbl(id,btn){const el=document.getElementById(id);const r=document.createRange();r.selectNode(el);window.getSelection().removeAllRanges();window.getSelection().addRange(r);document.execCommand('copy');window.getSelection().removeAllRanges();const o=btn.textContent;btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent=o,1800);}
 
-function splitBlocks(raw){
-  const lines=raw.split('\n'),blocks=[];let cur=null;
-  lines.forEach(l=>{
-    if(HDR.test(l)&&!/^\s*[•*\-–]/.test(l)){if(cur)blocks.push(cur);cur=[l];}
-    else if(cur)cur.push(l);
-  });
-  if(cur)blocks.push(cur);
-  return blocks;
+// ===== REMOTE CONFIG =====
+let rcData=null,rcCurView='text',rcCurFileId=null;
+const RC_SK='rc_files_v1';
+function rcGetFiles(){try{return JSON.parse(localStorage.getItem(RC_SK)||'[]');}catch{return[];}}
+function rcSetFiles(f){try{localStorage.setItem(RC_SK,JSON.stringify(f));}catch{}}
+function rcGetEdText(){function walk(n){if(n.nodeType===3)return n.textContent;if(n.nodeName==='BR')return'\n';if(['DIV','P'].includes(n.nodeName))return Array.from(n.childNodes).map(walk).join('')+'\n';return Array.from(n.childNodes).map(walk).join('');}return walk(document.getElementById('rcEdit')).replace(/\n+$/,'');}
+function rcSetEdText(txt){document.getElementById('rcEdit').textContent=txt;rcUpdateLn(txt);rcParseJson(txt);}
+function rcUpdateLn(txt){const n=(txt||'').split('\n').length;document.getElementById('rcLineNums').textContent=Array.from({length:n},(_,i)=>i+1).join('\n');}
+function rcParseJson(txt){const st=document.getElementById('rcStJson');document.getElementById('rcStLen').textContent=(txt||'').length+' chars';if(!txt?.trim()){rcData=null;st.textContent='';return;}try{rcData=JSON.parse(txt);st.textContent='✓ Valid JSON';st.style.color='#4a8a2a';}catch(e){rcData=null;st.textContent='✗ '+e.message;st.style.color='#c0392b';}}
+function rcOnEdit(){const txt=rcGetEdText();rcUpdateLn(txt);rcParseJson(txt);}
+function rcSyncLn(){document.getElementById('rcLineNums').scrollTop=document.getElementById('rcEdit').scrollTop;}
+function rcSyncBack(){if(!rcData)return;const txt=JSON.stringify(rcData,null,2);document.getElementById('rcEdit').textContent=txt;rcUpdateLn(txt);document.getElementById('rcStLen').textContent=txt.length+' chars';}
+
+function rcRenderSidebar(){
+  const files=rcGetFiles();const list=document.getElementById('rcSbList');
+  if(!files.length){list.innerHTML='<div class="rc-sb-empty">Chưa có file nào.<br>Nhấn "+ New" để tạo.</div>';return;}
+  list.innerHTML=files.map(f=>`<div class="rc-sb-item${f.id===rcCurFileId?' active':''}" onclick="rcOpenFile('${f.id}')">
+    <div class="rc-sb-name" title="${esc(f.name)}">${esc(f.name)}</div>
+    <div class="rc-sb-date">${f.date}</div>
+    <div class="rc-sb-actions">
+      <button class="rc-sb-btn cp" id="rccp_${f.id}" onclick="event.stopPropagation();rcCopyFile('${f.id}')">Copy</button>
+      <button class="rc-sb-btn del" onclick="event.stopPropagation();rcDelFile('${f.id}')">Xóa</button>
+    </div>
+  </div>`).join('');
 }
 
-function parseBlock(block){
-  if(!block.length)return null;
-  const h=block[0];
-  const platform=/\bios\b/i.test(h)?'iOS':'Android';
-  const m=h.match(HDR);if(!m)return null;
-  const appName=m[1].trim().toUpperCase().replace(/\s+/g,'');
-  const version=m[3].replace(/\s+/g,'');
-  const isRelease=/release/i.test(m[2]);
-  const features=block.slice(1).filter(l=>l.trim()&&!/@/.test(l)&&!/https?:\/\//.test(l)).join('\n').trim();
-  const storeUrl=block.find(l=>/https?:\/\//.test(l))||'';
-  const rawAppName=m[1].trim();
-  return{appName,rawAppName,version,platform,features,date:getToday(),isRelease,storeUrl:storeUrl.trim()};
+function rcNew(){rcCurFileId=null;rcSetEdText('');document.getElementById('rcFileName').value='New JSON';document.getElementById('rcStJson').textContent='';rcRenderSidebar();}
+
+function rcSave(){
+  const name=document.getElementById('rcFileName').value.trim()||'Untitled';
+  const content=rcGetEdText();
+  const files=rcGetFiles();
+  const d=new Date();
+  const date=`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  const newId='f'+Date.now();
+  files.unshift({id:newId,name,content,date});
+  rcCurFileId=newId;
+  rcSetFiles(files);rcRenderSidebar();
+  const ok=document.getElementById('rcSaveOk');ok.style.display='inline';setTimeout(()=>ok.style.display='none',1800);
 }
 
-function buildTbl1(entries){
-  const map={};
-  entries.forEach(e=>{if(!map[e.appName])map[e.appName]={appName:e.appName,rows:[]};map[e.appName].rows.push(e);});
-  let h='';
-  Object.values(map).forEach(g=>{
-    const plats=[...new Set(g.rows.map(r=>r.platform))];
-    h+=`<table class="tbl1"><thead><tr class="ra"><th colspan="4">${esc(g.appName)}</th></tr>`;
-    plats.forEach(p=>{
-      h+=`<tr class="rp"><th colspan="4">${esc(p)}</th></tr><tr class="rh"><th style="width:105px">Date</th><th style="width:95px">Version</th><th>Updated Features</th><th style="width:85px">Note</th></tr>`;
-      g.rows.filter(r=>r.platform===p).forEach(r=>{
-        h+=`<tr><td>${esc(r.date)}</td><td>${esc(r.version)}</td><td class="feat">${esc(r.features)}</td><td></td></tr>`;
-      });
-    });
-    h+=`</thead><tbody></tbody></table>`;
-  });
-  return h;
+function rcOpenFile(id){const f=rcGetFiles().find(f=>f.id===id);if(!f)return;rcCurFileId=id;document.getElementById('rcFileName').value=f.name;rcSetEdText(f.content);rcRenderSidebar();if(rcCurView==='tree')rcRenderTree();if(rcCurView==='table')rcRenderTable();}
+
+function rcCopyFile(id){
+  const f=rcGetFiles().find(f=>f.id===id);if(!f)return;
+  navigator.clipboard?.writeText(f.content).catch(()=>{const ta=document.createElement('textarea');ta.value=f.content;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});
+  const btn=document.getElementById('rccp_'+id);if(btn){btn.textContent='✓';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied');},1600);}
 }
 
-function buildTbl2(releases){
-  let h=`<table class="tbl2"><thead><tr>
-    <th>STT</th><th>Date</th><th>Nick name</th><th>Name</th>
-    <th>TK publish trên</th><th>Trans Acc</th><th>Trang thái</th>
-    <th>Android</th><th>iOS</th><th>Note</th><th>Package Name</th>
-  </tr></thead><tbody>`;
-  releases.forEach((r,i)=>{
-    h+=`<tr>
-      <td>${i+1}</td>
-      <td>${esc(getMonthYear())}</td>
-      <td>${esc(r.rawAppName)}</td>
-      <td class="editable" id="name_${i}">${esc(r.appInfo?.appName||'')}</td>
-      <td class="editable" id="pub_${i}">${esc(r.appInfo?.publisher||'')}</td>
-      <td></td>
-      <td>Test prototype</td>
-      <td>${esc(r.storeUrl||'')}</td>
-      <td></td>
-      <td></td>
-      <td>${esc(r.appInfo?.packageName||'')}</td>
-    </tr>`;
-  });
-  h+=`</tbody></table>`;
-  return h;
+function rcDelFile(id){if(!confirm('Xóa file này?'))return;rcSetFiles(rcGetFiles().filter(f=>f.id!==id));if(rcCurFileId===id){rcCurFileId=null;rcSetEdText('');document.getElementById('rcFileName').value='New JSON';}rcRenderSidebar();}
+
+function rcSwitchView(v,btn){
+  rcCurView=v;document.querySelectorAll('.rc-vtab').forEach(el=>el.classList.remove('active'));btn.classList.add('active');
+  document.getElementById('rcVText').style.display=v==='text'?'flex':'none';
+  document.getElementById('rcVTree').style.display=v==='tree'?'block':'none';
+  document.getElementById('rcVTable').style.display=v==='table'?'block':'none';
+  if(v==='tree')rcRenderTree();if(v==='table')rcRenderTable();
 }
 
-async function fetchOcr(){
-  const resp=await fetch('/.netlify/functions/ocr',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'ocr',imageBase64:b64,imageMime:mime})});
-  if(!resp.ok){const e=await resp.json().catch(()=>({}));throw new Error(e.error||`HTTP ${resp.status}`);}
-  const data=await resp.json();return data.text||'';
+function rcFormat(){try{const p=JSON.parse(rcGetEdText());rcSetEdText(JSON.stringify(p,null,2));}catch{alert('JSON không hợp lệ');}}
+function rcCompact(){try{const p=JSON.parse(rcGetEdText());rcSetEdText(JSON.stringify(p));}catch{alert('JSON không hợp lệ');}}
+function rcSmart(){try{function srt(o){if(Array.isArray(o))return o.map(srt);if(o&&typeof o==='object'){const r={};Object.keys(o).sort().forEach(k=>r[k]=srt(o[k]));return r;}return o;}rcSetEdText(JSON.stringify(srt(JSON.parse(rcGetEdText())),null,2));}catch{alert('JSON không hợp lệ');}}
+function rcCopyAll(){const txt=rcGetEdText();navigator.clipboard?.writeText(txt).catch(()=>{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});}
+function rcDownload(){const v=rcGetEdText();if(!v.trim())return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([v],{type:'application/json'}));a.download=(document.getElementById('rcFileName').value||'config')+'.json';a.click();}
+function rcExpandAll(){document.querySelectorAll('.t-children').forEach(el=>el.classList.remove('col'));document.querySelectorAll('.t-tog').forEach(el=>el.textContent='▼');}
+function rcCollapseAll(){document.querySelectorAll('.t-children').forEach((el,i)=>{if(i>0)el.classList.add('col');});document.querySelectorAll('.t-tog').forEach((el,i)=>{if(i>0)el.textContent='▶';});}
+
+function rcSetNestedVal(obj,path,val){const last=path[path.length-1];const parent=path.slice(0,-1).reduce((o,k)=>o[k],obj);parent[last]=val;}
+function rcMakeValEl(val,path){
+  const el=document.createElement('span');
+  let cls='',display='';
+  if(val===null){cls='t-null';display='null';}else if(typeof val==='boolean'){cls='t-bool';display=String(val);}else if(typeof val==='number'){cls='t-num';display=String(val);}else{cls='t-str';display=`"${val}"`;}
+  el.className='t-val '+cls;el.textContent=display;el.contentEditable='true';el.spellcheck=false;
+  el.addEventListener('blur',()=>{let raw=el.textContent.trim(),nv;if(raw==='null')nv=null;else if(raw==='true')nv=true;else if(raw==='false')nv=false;else if(!isNaN(raw)&&raw!=='')nv=Number(raw);else nv=raw.replace(/^"|"$/g,'');rcSetNestedVal(rcData,path,nv);rcSyncBack();if(nv===null){el.className='t-val t-null';el.textContent='null';}else if(typeof nv==='boolean'){el.className='t-val t-bool';el.textContent=String(nv);}else if(typeof nv==='number'){el.className='t-val t-num';el.textContent=String(nv);}else{el.className='t-val t-str';el.textContent=`"${nv}"`;};});
+  el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();el.blur();}});
+  return el;
 }
-
-async function fetchPlayStore(storeUrl){
-  const resp=await fetch('/.netlify/functions/ocr',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'playstore',storeUrl})});
-  if(!resp.ok)return{appName:'',publisher:'',packageName:''};
-  return await resp.json();
-}
-
-async function doTransfer(){
-  const err=document.getElementById('errMsg'),ld=document.getElementById('ldMsg'),btn=document.getElementById('btnT');
-  err.style.display='none';ld.style.display='none';
-  let raw='';
-
-  if(tab==='image'){
-    if(!b64){err.textContent='Vui lòng chọn hoặc dán ảnh.';err.style.display='block';return;}
-    btn.disabled=true;ld.style.display='flex';document.getElementById('ldTxt').textContent='Đang đọc ảnh bằng AI...';
-    try{raw=await fetchOcr();}
-    catch(e){btn.disabled=false;ld.style.display='none';err.textContent='Lỗi: '+e.message;err.style.display='block';return;}
-    btn.disabled=false;ld.style.display='none';
-  } else {
-    raw=getText();
-  }
-
-  if(!raw.trim()){err.textContent='Không có nội dung.';err.style.display='block';return;}
-
-  const blocks=splitBlocks(raw);
-  const entries=blocks.map(parseBlock).filter(Boolean);
-  if(!entries.length){err.textContent='Không nhận diện được dữ liệu.';err.style.display='block';return;}
-
-  // Bảng 1
-  document.getElementById('tblOut1').innerHTML=buildTbl1(entries);
-  document.getElementById('result1').style.display='block';
-
-  // Bảng 2 — chỉ khi có release
-  const releases=entries.filter(e=>e.isRelease);
-  if(releases.length){
-    document.getElementById('result2').style.display='block';
-    document.getElementById('ldStore').style.display='flex';
-    document.getElementById('tblOut2').innerHTML='';
-
-    // Fetch Play Store info cho từng release
-    for(const r of releases){
-      if(r.storeUrl){
-        try{r.appInfo=await fetchPlayStore(r.storeUrl);}
-        catch{r.appInfo={appName:'',publisher:'',packageName:''};}
-      } else {
-        r.appInfo={appName:'',publisher:'',packageName:''};
+function rcBuildTreeNode(val,path,container){
+  if(typeof val==='object'&&val!==null){
+    const isArr=Array.isArray(val);
+    const entries=isArr?val.map((v,i)=>[i,v]):Object.entries(val);
+    entries.forEach(([k,v])=>{
+      const childPath=[...path,isArr?Number(k):k];
+      const row=document.createElement('div');row.className='t-row';
+      if(typeof v==='object'&&v!==null){
+        const tog=document.createElement('span');tog.className='t-tog';tog.textContent='▼';
+        const keyEl=document.createElement('span');keyEl.className='t-key';keyEl.textContent=String(k)+': ';
+        const bracket=document.createElement('span');bracket.className='t-bracket';bracket.textContent=Array.isArray(v)?`[${v.length}]`:`{${Object.keys(v).length}}`;
+        row.appendChild(tog);row.appendChild(keyEl);row.appendChild(bracket);container.appendChild(row);
+        const children=document.createElement('div');children.className='t-children';
+        tog.addEventListener('click',()=>{const c=children.classList.toggle('col');tog.textContent=c?'▶':'▼';});
+        rcBuildTreeNode(v,childPath,children);container.appendChild(children);
+      }else{
+        const sp=document.createElement('span');sp.className='t-tog';
+        const keyEl=document.createElement('span');keyEl.className='t-key';keyEl.textContent=String(k)+': ';
+        const valEl=rcMakeValEl(v,childPath);
+        row.appendChild(sp);row.appendChild(keyEl);row.appendChild(valEl);container.appendChild(row);
       }
-    }
+    });
+  }
+}
+function rcRenderTree(){const w=document.getElementById('rcVTree');if(!rcData){w.innerHTML='<span style="color:#aac4ac;padding:10px;display:block">Dán JSON rồi nhấn Format trước</span>';return;}w.innerHTML='';rcBuildTreeNode(rcData,[],w);}
 
-    document.getElementById('ldStore').style.display='none';
-    document.getElementById('tblOut2').innerHTML=buildTbl2(releases);
-    document.getElementById('result2').scrollIntoView({behavior:'smooth',block:'start'});
-  } else {
-    document.getElementById('result2').style.display='none';
+function rcFmtArr(arr){if(!arr||!arr.length)return '';return arr.map(v=>String(v)).join('');}
+
+function rcRenderTable(){
+  const w=document.getElementById('rcVTable');
+  if(!rcData){w.innerHTML='<span style="color:#aac4ac;padding:10px;display:block">Dán JSON rồi nhấn Format trước</span>';return;}
+
+  // Check if it's Banner format: data is object with scene keys containing screenInfos
+  const data=rcData.data;
+  if(data&&typeof data==='object'&&!Array.isArray(data)){
+    const firstVal=Object.values(data)[0];
+    if(firstVal?.screenInfos){
+      // Banner table format
+      let rows=[];let stt=1;
+      for(const [sceneName,sceneVal] of Object.entries(data)){
+        const screenInfos=sceneVal.screenInfos||{};
+        for(const [screenKey,screenVal] of Object.entries(screenInfos)){
+          rows.push({stt:stt++,scene:Object.keys(screenInfos).length>1?`${sceneName}:${screenKey}`:sceneName,globalBanner:rcFmtArr(screenVal.banners||[]),globalMrec:rcFmtArr(screenVal.mrecs||[]),organicBanner:'',organicMrec:''});
+        }
+      }
+      let h=`<div style="display:flex;justify-content:flex-end;margin-bottom:6px"><button class="btn-cp" onclick="rcCopyTable('rcBannerTbl',this)">📋 Copy bảng</button></div>
+      <div style="overflow-x:auto"><table class="banner-tbl" id="rcBannerTbl">
+        <thead>
+          <tr><th colspan="2" class="bg-green">BANNER</th><th colspan="2" class="bg-global">Global</th><th colspan="2" class="bg-organic">Organic</th></tr>
+          <tr><th class="bg-green">STT</th><th class="bg-green">Scene</th><th class="bg-global">Banner<br><span style="font-weight:400;font-size:9px">(T/B/TL/TR/BL/BR)</span></th><th class="bg-global">Mrec<br><span style="font-weight:400;font-size:9px">(T/B/C/L/R)</span></th><th class="bg-organic">Banner<br><span style="font-weight:400;font-size:9px">(T/B/TL/TR/BL/BR)</span></th><th class="bg-organic">Mrec<br><span style="font-weight:400;font-size:9px">(T/B/C/L/R)</span></th></tr>
+        </thead><tbody>`;
+      rows.forEach(r=>{h+=`<tr><td class="td-stt">${r.stt}</td><td class="td-scene">${esc(r.scene)}</td><td>${esc(r.globalBanner)}</td><td>${esc(r.globalMrec)}</td><td>${esc(r.organicBanner)}</td><td>${esc(r.organicMrec)}</td></tr>`;});
+      h+=`</tbody></table></div>`;
+      w.innerHTML=h;return;
+    }
   }
 
-  document.getElementById('result1').scrollIntoView({behavior:'smooth',block:'start'});
+  // Generic array table
+  let arr=Array.isArray(rcData)?rcData:(data&&Array.isArray(data)?data:null);
+  if(!arr){const arrKey=Object.keys(rcData).find(k=>Array.isArray(rcData[k]));if(arrKey)arr=rcData[arrKey];}
+  if(arr?.length){
+    const keys=[...new Set(arr.flatMap(item=>typeof item==='object'&&item?Object.keys(item):[]))];
+    let h=`<div style="display:flex;justify-content:flex-end;margin-bottom:6px"><button class="btn-cp" onclick="rcCopyTable('rcGenTbl',this)">📋 Copy bảng</button></div><table class="rc-tbl" id="rcGenTbl"><thead><tr>${keys.map(k=>`<th>${esc(k)}</th>`).join('')}</tr></thead><tbody>`;
+    arr.forEach((item,ri)=>{h+=`<tr>${keys.map(k=>{const v=item?.[k];if(v===undefined)return'<td></td>';if(typeof v==='object')return`<td><div class="cell-in" style="font-size:10px;color:#557559;padding:5px 8px">${esc(JSON.stringify(v))}</div></td>`;return`<td><input class="cell-in" value="${esc(String(v))}" onchange="rcData[${ri}]['${k}']=isNaN(this.value)?this.value:Number(this.value);rcSyncBack()"></td>`;}).join('')}</tr>`;});
+    h+=`</tbody></table>`;w.innerHTML=h;
+  }else{
+    let h=`<div style="display:flex;justify-content:flex-end;margin-bottom:6px"><button class="btn-cp" onclick="rcCopyTable('rcFlatTbl',this)">📋 Copy bảng</button></div><table class="rc-tbl" id="rcFlatTbl"><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody>`;
+    Object.entries(rcData).forEach(([k,v])=>{h+=`<tr><td style="font-weight:600;padding:5px 8px">${esc(k)}</td><td><pre style="margin:0;font-size:10px;padding:5px 8px;white-space:pre-wrap">${esc(typeof v==='object'?JSON.stringify(v,null,2):String(v))}</pre></td></tr>`;});
+    w.innerHTML=h+`</tbody></table>`;
+  }
 }
 
-function doClear(){
-  document.getElementById('pasteBox').innerHTML='';
-  document.getElementById('tblOut1').innerHTML='';
-  document.getElementById('tblOut2').innerHTML='';
-  document.getElementById('result1').style.display='none';
-  document.getElementById('result2').style.display='none';
-  document.getElementById('errMsg').style.display='none';
-  document.getElementById('ldMsg').style.display='none';
-  removeImg();
-}
-
-function copyTbl(id){
-  const el=document.getElementById(id);
+function rcCopyTable(id,btn){
+  const el=document.getElementById(id);if(!el)return;
   const r=document.createRange();r.selectNode(el);
   window.getSelection().removeAllRanges();window.getSelection().addRange(r);
   document.execCommand('copy');window.getSelection().removeAllRanges();
-  event.target.textContent='✓ Copied!';
-  setTimeout(()=>event.target.textContent='📋 Copy',1800);
+  const o=btn.textContent;btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent=o,1800);
 }
+
+rcRenderSidebar();
 </script>
 </body>
 </html>
